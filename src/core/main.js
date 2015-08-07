@@ -33,7 +33,7 @@ define(function (require, exports) {
         this.activeMoney = [];
         canvas.init();
 
-        require('RS/main').init(function () {
+        require('resource/main').init(function () {
             // alert("jiazai");
             this.reset();
             this.start = this.then = Date.now();

@@ -2,8 +2,11 @@
  * @file config/mian.js
  * @author lidianbin
  */
+
+
 define(function (require) {
     console.log('load config!');
+    console.log(window.location);
     var Configure = function () {
         // var conf = require("text!config/config.json");
         // this.config =  JSON.parse(conf);

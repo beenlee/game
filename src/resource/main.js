@@ -1,11 +1,11 @@
 /**
- * @file core/main.js
+ * @file resource/main.js
  * @author lidianbin
  */
 define(function (require) {
 
     var conf = require('config/main');
-    var RS = {
+    var resource = {
 
         list: {},
         init: function (callback) {
@@ -47,5 +47,5 @@ define(function (require) {
 
         }
     };
-    return RS;
+    return resource;
 });

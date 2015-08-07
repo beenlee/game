@@ -3,7 +3,7 @@
  * @author lidianbin
  */
 define(function (require, exports) {
-    var RS = require('RS/main');
+    var resource = require('resource/main');
     var canvas = require('canvas/main');
     function Money() {
         this.inUse = false;
@@ -19,7 +19,7 @@ define(function (require, exports) {
         this.init = function () {
             this.elm.x = Math.random() * (canvas.width - this.elm.width);
             this.elm.y = 40;
-            this.elm.obj = RS.list.money[Math.floor(Math.random() * 3)];
+            this.elm.obj = resource.list.money[Math.floor(Math.random() * 3)];
             this.speed = Math.random() * 100 + 50;
         };
 

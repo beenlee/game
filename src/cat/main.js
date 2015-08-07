@@ -5,7 +5,7 @@
 define(function (require) {
     var canvas = require('canvas/main');
     var config = require('config/main');
-    var RS = require('RS/main');
+    var resource = require('resource/main');
 
     var cat = {
         elm: {
@@ -41,7 +41,7 @@ define(function (require) {
         },
         init: function () {
             this.elm.class = 'image';
-            this.elm.obj = RS.list.cat;
+            this.elm.obj = resource.list.cat;
             this.elm.x = 10;
             this.elm.y = canvas.height - 110;
             this.elm.width = 100;
