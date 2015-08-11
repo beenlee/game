@@ -1,5 +1,5 @@
 /**
- * @file core/main.js
+ * @file 游戏主模块
  * @author lidianbin
  */
 define(function (require, exports) {
@@ -19,7 +19,7 @@ define(function (require, exports) {
     var moneyPool = require('moneyPool/main');
     var cat = require('cat/main');
     var canvas = require('canvas/main');
-
+    var config = require('config/main');
     /**
      * init
      *
@@ -31,6 +31,8 @@ define(function (require, exports) {
         this.start = null;
         this.score = 0;
         this.activeMoney = [];
+        this.gameTime = config.sys.gameTime;
+        this.remainingTime = config.sys.gameTime;
         canvas.init();
 
         require('resource/main').init(function () {
@@ -53,6 +55,9 @@ define(function (require, exports) {
         if (this.status === 'play') {
             this.play();
         }
+        else if (this.status === 'gameover') {
+            this.gameover();
+        }
         else if (this.status === 'home') {
             this.home();
         }
@@ -64,6 +69,7 @@ define(function (require, exports) {
         this.start = null;
         this.score = 0;
         this.activeMoney = [];
+        this.gameTime = config.sys.gameTime;
     };
     
     /**
@@ -71,9 +77,17 @@ define(function (require, exports) {
      *
      */
     exports.home = function () {
-
+        console.log('home');
     };
-
+    
+    /**
+     * 游戏结束
+     *
+     */
+    exports.gameover = function () {
+        console.log('game over!!');
+        console.log('得分：' + this.score);
+    };
 
     /**
      * 更新各种对象
@@ -85,7 +99,8 @@ define(function (require, exports) {
         // console.log(Math.floor(now / 1000) + '---' + Math.floor(then / 1000));
         if (Math.floor(now / 1000) !== Math.floor(this.then / 1000)) {
 
-            if (this.activeMoney.length < 4) {
+            var dropObjCount = config.sys.dropObjCount;
+            if (this.activeMoney.length < dropObjCount) {
                 var money = moneyPool.get();
                 if (money) {
                     this.activeMoney.push(money);
@@ -108,7 +123,7 @@ define(function (require, exports) {
                 && this.activeMoney[i].elm.y <= cat.elm.y + cat.elm.height
             ) {
                 this.activeMoney[i].clear();
-                this.score += 1;
+                this.score += this.activeMoney[i].fun;
             }
             else if (this.activeMoney[i].elm.y > canvas.height) {
                 this.activeMoney[i].clear();
@@ -117,6 +132,7 @@ define(function (require, exports) {
                 tmpMoney.push(this.activeMoney[i]);
             }
         }
+        
         this.activeMoney = tmpMoney;
     };
 
@@ -125,12 +141,20 @@ define(function (require, exports) {
      *
      */
     exports.play = function () {
+
         var now  = Date.now();
         var delta = now - this.then;
+        
+        var t = Math.floor((this.then - this.start) / 1000);
+        this.remainingTime = this.gameTime - t;
+        if (this.remainingTime < 0) {
+            this.status = 'gameover';
+            this.remainingTime = 0;
+        }
         this.update(delta / 1000);
         this.render();
-
         this.then = now;
+        
         requestAnimationFrame(this.mainLoop.bind(this));
     };
 
@@ -177,7 +201,7 @@ define(function (require, exports) {
         ctx.font = '24px Helvetica';
         ctx.textAlign = 'left';
         ctx.textBaseline = 'top';
-        ctx.fillText('时间: ' + Math.floor((this.then - this.start) / 1000), 200, 32);
+        ctx.fillText('时间: ' + this.remainingTime, 200, 32);
 
     };
 

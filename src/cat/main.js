@@ -13,8 +13,8 @@ define(function (require) {
             'obj': null,
             'x': 10,
             'y': 10,
-            'width': 100,
-            'height': 100
+            'width': 60,
+            'height': 60
         },
         reset: function () {
 
@@ -43,9 +43,9 @@ define(function (require) {
             this.elm.class = 'image';
             this.elm.obj = resource.list.cat;
             this.elm.x = 10;
-            this.elm.y = canvas.height - 110;
-            this.elm.width = 100;
-            this.elm.height = 100;
+            this.elm.y = canvas.height - 70;
+            this.elm.width = 60;
+            this.elm.height = 60;
         }
 
     };
