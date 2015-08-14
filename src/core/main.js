@@ -20,13 +20,14 @@ define(function (require, exports) {
     var cat = require('cat/main');
     var canvas = require('canvas/main');
     var config = require('config/main');
+    var home = require('home/main');
     /**
      * init
      *
      */
     exports.init = function () {
 
-        this.status = 'play';
+        this.status = 'home';
         this.then = null;
         this.start = null;
         this.score = 0;
@@ -36,12 +37,13 @@ define(function (require, exports) {
         canvas.init();
 
         require('resource/main').init(function () {
-            // alert("jiazai");
-            this.reset();
-            this.start = this.then = Date.now();
-            moneyPool.init();
-            cat.init();
-            this.mainLoop();
+            this.home(function () {
+                this.reset();
+                this.start = this.then = Date.now();
+                moneyPool.init();
+                cat.init();
+                this.mainLoop();
+            }.bind(this));
         }.bind(this));
 
     };
@@ -71,15 +73,15 @@ define(function (require, exports) {
         this.activeMoney = [];
         this.gameTime = config.sys.gameTime;
     };
-    
+
     /**
      * 游戏首页
      *
      */
-    exports.home = function () {
-        console.log('home');
+    exports.home = function (callback) {
+        home.init(callback);
     };
-    
+
     /**
      * 游戏结束
      *
