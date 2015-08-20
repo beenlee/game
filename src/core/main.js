@@ -20,6 +20,7 @@ define(function (require, exports) {
     var cat = require('cat/main');
     var canvas = require('canvas/main');
     var config = require('config/main');
+    var background = require('background/main');
     /**
      * init
      *
@@ -39,6 +40,7 @@ define(function (require, exports) {
             // alert("jiazai");
             this.reset();
             this.start = this.then = Date.now();
+            background.init();
             moneyPool.init();
             cat.init();
             this.mainLoop();
@@ -164,13 +166,9 @@ define(function (require, exports) {
      */
     exports.render = function () {
         // 画背景
-        var ctx = canvas.getContext2d();
+        var ctx = canvas.getFContext2d();
         ctx.beginPath();
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.rect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = 'black';
-        ctx.fill();
-
         // 画主要场景
         var catElm = cat.elm;
         // ctx.beginPath();

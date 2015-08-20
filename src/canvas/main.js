@@ -9,17 +9,30 @@ define(function (require) {
         init: function () {
             var bodyW = document.body.clientWidth;
             var bodyH = document.body.clientHeight;
-            var canvas = this.canvas = document.createElement('canvas');
-            this.ctx = canvas.getContext('2d');
+            
+            this.canvasB = document.createElement('canvas');
+            this.ctxB = this.canvasB.getContext('2d');
+            this.canvasB.width = 320;
+            this.canvasB.height = 320 * bodyH / bodyW;
+            this.canvasB.style.width = '100%';
+            this.canvasB.style.height = '100%';
+            // this.canvasB.style.background = 'green';
+            this.canvasB.style.position = 'absolute';
+            document.body.appendChild(this.canvasB);
 
-            canvas.width = 320;
-            canvas.height = 320 * bodyH / bodyW;
-            canvas.style.width = '100%';
-            canvas.style.height = '100%';
-            canvas.style.background = 'green';
-            document.body.appendChild(canvas);
+            this.canvasF = document.createElement('canvas');
+            this.ctxF = this.canvasF.getContext('2d');
+            this.canvasF.width = 320;
+            this.canvasF.height = 320 * bodyH / bodyW;
+            this.canvasF.style.width = '100%';
+            this.canvasF.style.height = '100%';
+            //canvasF.style.background = 'green';
+            this.canvasF.style.position = 'absolute';
+            this.canvasF.style.top = '0';
+            this.canvasF.style.left = '0';
+            document.body.appendChild(this.canvasF);
 
-            canvas.addEventListener(eStart, function (e) {
+            this.canvasF.addEventListener(eStart, function (e) {
                 // console.log(window);
                 // console.log(e);
                 // console.log(e.touches[0].pageX ,'<', document.body.clientWidth / 2 );
@@ -35,7 +48,7 @@ define(function (require) {
 
             }.bind(this), false);
 
-            canvas.addEventListener(eMove, function (e) {
+            this.canvasF.addEventListener(eMove, function (e) {
                 // console.log(e);
                 e.preventDefault();
                 e.stopPropagation();
@@ -48,7 +61,7 @@ define(function (require) {
                     this.direction = 'right';
                 }
             }.bind(this), false);
-            canvas.addEventListener(eEnd, function (e) {
+            this.canvasF.addEventListener(eEnd, function (e) {
                 // console.log(e);
                 e.preventDefault();
                 e.stopPropagation();
@@ -58,20 +71,31 @@ define(function (require) {
         },
 
         get width() {
-            return this.canvas.width;
+            return this.canvasF.width;
         },
         set width(val) {
-            this.canvas.width = val;
+            this.canvasF.width = val;
+            this.canvasB.width = val;
         },
 
         get height() {
-            return this.canvas.height;
+            return this.canvasF.height;
         },
         set height(val) {
-            this.canvas.height = val;
+            this.canvasB.height = val;
+            this.canvasF.height = val;
         },
-        getContext2d: function () {
-            return this.ctx;
+        getFContext2d: function () {
+            return this.ctxF;
+        },
+        getBContext2d: function () {
+            return this.ctxB;
+        },
+        getBCanvas: function () {
+            return this.canvasB;
+        },
+        getFCanvas: function () {
+            return this.canvasF;
         }
 
 
