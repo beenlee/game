@@ -3,7 +3,7 @@
  * @author lidianbin
  */
 define(function (require, exports) {
-	window.requestAnimationFrame
+    window.requestAnimationFrame
         || (window.requestAnimationFrame
             = window.webkitRequestAnimationFrame
                 || window.msRequestAnimationFrame
