@@ -3,6 +3,7 @@
  * @author lidianbin
  */
 define(function (require, exports) {
+    var $ = require('jquery');
 	window.requestAnimationFrame
         || (window.requestAnimationFrame
             = window.webkitRequestAnimationFrame
@@ -37,13 +38,13 @@ define(function (require, exports) {
         canvas.init();
 
         require('resource/main').init(function () {
-            this.home(function () {
+            // this.home(function () {
                 this.reset();
                 this.start = this.then = Date.now();
                 moneyPool.init();
                 cat.init();
                 this.mainLoop();
-            }.bind(this));
+            // }.bind(this));
         }.bind(this));
 
     };
@@ -89,6 +90,19 @@ define(function (require, exports) {
     exports.gameover = function () {
         console.log('game over!!');
         console.log('得分：' + this.score);
+        // $.setCookie('best', this.score, { expires: 7, path: '/' });
+        // alert($.cookie('best'));
+        if (localStorage) {
+            if (!localStorage.best) {
+                localStorage.best = this.score;
+            }
+            else {
+                var oldScore = localStorage.best;
+                if (oldScore >= this.score) {
+                    localStorage.best = this.score;
+                }
+            }
+        }
     };
 
     /**
