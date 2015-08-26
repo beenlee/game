@@ -4,12 +4,12 @@
  */
 define(function (require) {
 
+
     var canvasObj = {
         direction: 'none',
         init: function () {
             var bodyW = document.body.clientWidth;
             var bodyH = document.body.clientHeight;
-            
             this.canvasB = document.createElement('canvas');
             this.ctxB = this.canvasB.getContext('2d');
             this.canvasB.width = 320;
@@ -33,8 +33,6 @@ define(function (require) {
             document.body.appendChild(this.canvasF);
 
             this.canvasF.addEventListener(eStart, function (e) {
-                // console.log(window);
-                // console.log(e);
                 // console.log(e.touches[0].pageX ,'<', document.body.clientWidth / 2 );
                 e.preventDefault();
                 e.stopPropagation();
@@ -49,10 +47,8 @@ define(function (require) {
             }.bind(this), false);
 
             this.canvasF.addEventListener(eMove, function (e) {
-                // console.log(e);
                 e.preventDefault();
                 e.stopPropagation();
-
                 var evt = e.touches ? e.touches[0] : e;
                 if (evt.pageX < (document.body.clientWidth / 2)) {
                     this.direction = 'left';
@@ -100,6 +96,7 @@ define(function (require) {
 
 
     };
+
     return canvasObj;
 })
 ;

@@ -3,7 +3,9 @@
  * @author lidianbin
  */
 define(function (require, exports) {
-    window.requestAnimationFrame
+
+    var $ = require('jquery');
+	window.requestAnimationFrame
         || (window.requestAnimationFrame
             = window.webkitRequestAnimationFrame
                 || window.msRequestAnimationFrame
@@ -20,14 +22,14 @@ define(function (require, exports) {
     var cat = require('cat/main');
     var canvas = require('canvas/main');
     var config = require('config/main');
+    var home = require('home/main');
     var background = require('background/main');
     /**
      * init
      *
      */
     exports.init = function () {
-
-        this.status = 'play';
+        this.status = 'home';
         this.then = null;
         this.start = null;
         this.score = 0;
@@ -37,13 +39,14 @@ define(function (require, exports) {
         canvas.init();
 
         require('resource/main').init(function () {
-            // alert("jiazai");
-            this.reset();
-            this.start = this.then = Date.now();
             background.init();
-            moneyPool.init();
-            cat.init();
-            this.mainLoop();
+            this.home(function () {
+                this.reset();
+                this.start = this.then = Date.now();
+                moneyPool.init();
+                cat.init();
+                this.mainLoop();
+            }.bind(this));
         }.bind(this));
 
     };
@@ -73,15 +76,15 @@ define(function (require, exports) {
         this.activeMoney = [];
         this.gameTime = config.sys.gameTime;
     };
-    
+
     /**
      * 游戏首页
      *
      */
-    exports.home = function () {
-        console.log('home');
+    exports.home = function (callback) {
+        home.init(callback);
     };
-    
+
     /**
      * 游戏结束
      *
@@ -89,6 +92,19 @@ define(function (require, exports) {
     exports.gameover = function () {
         console.log('game over!!');
         console.log('得分：' + this.score);
+        // $.setCookie('best', this.score, { expires: 7, path: '/' });
+        // alert($.cookie('best'));
+        if (localStorage) {
+            if (!localStorage.best) {
+                localStorage.best = this.score;
+            }
+            else {
+                var oldScore = localStorage.best;
+                if (oldScore >= this.score) {
+                    localStorage.best = this.score;
+                }
+            }
+        }
     };
 
     /**
@@ -134,7 +150,7 @@ define(function (require, exports) {
                 tmpMoney.push(this.activeMoney[i]);
             }
         }
-        
+
         this.activeMoney = tmpMoney;
     };
 
@@ -146,7 +162,7 @@ define(function (require, exports) {
 
         var now  = Date.now();
         var delta = now - this.then;
-        
+
         var t = Math.floor((this.then - this.start) / 1000);
         this.remainingTime = this.gameTime - t;
         if (this.remainingTime < 0) {
@@ -156,7 +172,7 @@ define(function (require, exports) {
         this.update(delta / 1000);
         this.render();
         this.then = now;
-        
+
         requestAnimationFrame(this.mainLoop.bind(this));
     };
 
