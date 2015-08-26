@@ -3,6 +3,7 @@
  * @author lidianbin
  */
 define(function (require, exports) {
+
     var $ = require('jquery');
 	window.requestAnimationFrame
         || (window.requestAnimationFrame
@@ -22,12 +23,12 @@ define(function (require, exports) {
     var canvas = require('canvas/main');
     var config = require('config/main');
     var home = require('home/main');
+    var background = require('background/main');
     /**
      * init
      *
      */
     exports.init = function () {
-
         this.status = 'home';
         this.then = null;
         this.start = null;
@@ -38,13 +39,14 @@ define(function (require, exports) {
         canvas.init();
 
         require('resource/main').init(function () {
-            // this.home(function () {
+            background.init();
+            this.home(function () {
                 this.reset();
                 this.start = this.then = Date.now();
                 moneyPool.init();
                 cat.init();
                 this.mainLoop();
-            // }.bind(this));
+            }.bind(this));
         }.bind(this));
 
     };
@@ -180,13 +182,9 @@ define(function (require, exports) {
      */
     exports.render = function () {
         // 画背景
-        var ctx = canvas.getContext2d();
+        var ctx = canvas.getFContext2d();
         ctx.beginPath();
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.rect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = 'black';
-        ctx.fill();
-
         // 画主要场景
         var catElm = cat.elm;
         // ctx.beginPath();

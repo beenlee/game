@@ -11,6 +11,7 @@ define(function (require) {
         // var conf = require("text!config/config.json");
         // this.config =  JSON.parse(conf);
         this.RSList = [
+            {src: 'src/background/img/bg.png', name: 'bg'},
             {src: 'src/cat/img/cat.png', name: 'cat'},
             {src: 'src/moneyPool/img/money-0.png', name: 'money'},
             {src: 'src/moneyPool/img//money-1.png', name: 'money'},

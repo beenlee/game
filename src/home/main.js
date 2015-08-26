@@ -24,27 +24,27 @@ define(function (require) {
         callback: null,
         // 初始化
         layout: function () {
-            var ctx = canvas.getContext2d();
+            var ctx = canvas.getFContext2d();
 
             // 开始按钮
             ctx.fillStyle = 'rgb(250, 250, 250)';
             ctx.font = '24px Helvetica';
             ctx.textAlign = 'left';
             ctx.textBaseline = 'top';
-            ctx.fillText('开始游戏', canvas.canvas.width / 3, canvas.canvas.height / 5);
+            ctx.fillText('开始游戏', canvas.canvasF.width / 3, canvas.canvasF.height / 5);
             // 音乐开关
             ctx.fillStyle = 'rgb(250, 250, 250)';
             ctx.font = '24px Helvetica';
             ctx.textAlign = 'left';
             ctx.textBaseline = 'top';
-            ctx.fillText('音乐on/off', canvas.canvas.width / 3, canvas.canvas.height / 5 * 2);
+            ctx.fillText('音乐on/off', canvas.canvasF.width / 3, canvas.canvasF.height / 5 * 2);
 
             // 查看排行榜
             ctx.fillStyle = 'rgb(250, 250, 250)';
             ctx.font = '24px Helvetica';
             ctx.textAlign = 'left';
             ctx.textBaseline = 'top';
-            ctx.fillText('英雄榜', canvas.canvas.width / 3, canvas.canvas.height / 5 * 3);
+            ctx.fillText('英雄榜', canvas.canvasF.width / 3, canvas.canvasF.height / 5 * 3);
         },
 
         // 切换背景音乐
@@ -84,13 +84,14 @@ define(function (require) {
             var me = this;
             this.callback = callback;
             this.layout();
-            canvas.canvas.addEventListener('click', bind);
+            canvas.canvasF.addEventListener(eStart, bind);
         }
 
     };
 
     function bind(e) {
-        console.log(home.callback);
+        var home = require('home/main');
+        console.log(eStart);
         var me = home;
         var height = window.document.body.clientHeight;
         var width = window.document.body.clientWidth;
@@ -102,18 +103,20 @@ define(function (require) {
         var heroBottom = height / 5 * 3 + 40;
         var commonLeft = width / 3;
         var commonRight = width / 3 * 2;
+        var e = e.targetTouches[0];
+        // console.log(e);
 
-        if (e.x < commonRight && e.x > commonLeft) {
-            if (e.y < beginBottom && e.y > beginTop) {
+        if (e.pageX < commonRight && e.pageX > commonLeft) {
+            if (e.pageY < beginBottom && e.pageY > beginTop) {
                 console.log("点击了开始游戏");
-                canvas.canvas.removeEventListener('click', bind);
+                canvas.canvasF.removeEventListener(eStart, bind);
                 home.callback();
             }
-            else if (e.y < musicBottom && e.y > musicTop) {
+            else if (e.pageY < musicBottom && e.pageY > musicTop) {
                 console.log('点击了背景音乐');
                 home.bgToggle();
             }
-            else if (e.y < heroBottom && e.y > heroTop) {
+            else if (e.pageY < heroBottom && e.pageY > heroTop) {
                 console.log("点击了排行榜");
                 home.showBest();
             }
