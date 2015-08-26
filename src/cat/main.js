@@ -22,7 +22,7 @@ define(function (require) {
         speed: 200,
         // direction: 'none',
         move: function (t) {
-            // console.log(this.direction);
+            console.log(canvas.direction);
             if (canvas.direction === 'left') {
                 this.elm.x -= t * this.speed;
                 if (this.elm.x < 0) {

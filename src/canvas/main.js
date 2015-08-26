@@ -36,7 +36,7 @@ define(function (require) {
             }.bind(this), false);
 
             canvas.addEventListener(eMove, function (e) {
-                // console.log(e);
+                console.log(e);
                 e.preventDefault();
                 e.stopPropagation();
 

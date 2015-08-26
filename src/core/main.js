@@ -148,7 +148,7 @@ define(function (require, exports) {
                 tmpMoney.push(this.activeMoney[i]);
             }
         }
-        
+
         this.activeMoney = tmpMoney;
     };
 
@@ -160,7 +160,7 @@ define(function (require, exports) {
 
         var now  = Date.now();
         var delta = now - this.then;
-        
+
         var t = Math.floor((this.then - this.start) / 1000);
         this.remainingTime = this.gameTime - t;
         if (this.remainingTime < 0) {
@@ -170,7 +170,7 @@ define(function (require, exports) {
         this.update(delta / 1000);
         this.render();
         this.then = now;
-        
+
         requestAnimationFrame(this.mainLoop.bind(this));
     };
 

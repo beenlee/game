@@ -70,7 +70,7 @@ define(function (require) {
         },
 
         // 显示排行榜
-        
+
         showBest: function () {
             if (!localStorage.best) {
                 alert("先玩游戏才会有排行！");
