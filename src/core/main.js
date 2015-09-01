@@ -21,6 +21,7 @@ define(function (require, exports) {
     var canvas = require('canvas/main');
     var config = require('config/main');
     var background = require('background/main');
+    var handle = require('handle/main');
     /**
      * init
      *
@@ -36,8 +37,22 @@ define(function (require, exports) {
         this.remainingTime = config.sys.gameTime;
         canvas.init();
 
+        var pauseCB = function () {
+            this.status = 'pause';
+            this.begin = Date.now();
+            console.log('remain=' + this.remainingTime);
+        }.bind(this);
+        var continueCB = function () {
+            this.status = 'play';
+            this.end = Date.now();
+            this.gameTime += Math.floor((this.end - this.begin) / 1000);
+            this.mainLoop();
+        }.bind(this);
+        // console.log('re:' + (this.end - this.begin));
+        require('handle/main').init(pauseCB, continueCB);
+
         require('resource/main').init(function () {
-            // alert("jiazai");
+            var me = this;
             this.reset();
             this.start = this.then = Date.now();
             background.init();
@@ -45,7 +60,6 @@ define(function (require, exports) {
             cat.init();
             this.mainLoop();
         }.bind(this));
-
     };
 
     /**
@@ -63,6 +77,12 @@ define(function (require, exports) {
         else if (this.status === 'home') {
             this.home();
         }
+        else if (this.status === 'pause') {
+            // this.pauseGame();
+        }
+        else if (this.status === 'playAgain') {
+            // this.playAgain();
+        }
     };
 
     exports.reset = function () {
@@ -73,7 +93,7 @@ define(function (require, exports) {
         this.activeMoney = [];
         this.gameTime = config.sys.gameTime;
     };
-    
+
     /**
      * 游戏首页
      *
@@ -144,11 +164,13 @@ define(function (require, exports) {
      */
     exports.play = function () {
 
-        var now  = Date.now();
+        var now = Date.now();
+        // console.log('now = ' + now);
         var delta = now - this.then;
-        
         var t = Math.floor((this.then - this.start) / 1000);
         this.remainingTime = this.gameTime - t;
+        
+        // console.log(this.then == now);
         if (this.remainingTime < 0) {
             this.status = 'gameover';
             this.remainingTime = 0;
