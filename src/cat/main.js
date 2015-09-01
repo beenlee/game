@@ -7,6 +7,10 @@ define(function (require) {
     var config = require('config/main');
     var resource = require('resource/main');
 
+    /**
+     * [cat description]
+     * @type {Object}
+     */
     var cat = {
         elm: {
             'class': 'image',
@@ -39,6 +43,11 @@ define(function (require) {
 
             }
         },
+
+        /**
+         * 初始化
+         *
+         */
         init: function () {
             this.elm.class = 'image';
             this.elm.obj = resource.list.cat;
