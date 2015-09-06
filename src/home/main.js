@@ -47,20 +47,43 @@ define(function (require) {
             ctx.fillText('英雄榜', canvas.canvasF.width / 3, canvas.canvasF.height / 5 * 3);
 
             // 排行榜成绩展示
-            if (localStorage.best && localStorage.heroName) {
-                ctx.fillStyle = '#000';
-                ctx.font = '24px Helvetica';
-                ctx.textAlign = 'left';
-                ctx.textBaseline = 'top';
-                ctx.fillText(localStorage.heroName + ':' + localStorage.best, canvas.canvasF.width / 3, canvas.canvasF.height / 5 * 3.2);
+            if (localStorage.best) {
+                var me = this;
+                var re = JSON.parse(localStorage.best).sort(me.compareScore('score'));
+                for (var i = 0, len = re.length; i < len; i++ ) {
+                    ctx.fillStyle = '#000';
+                    ctx.font = '24px Helvetica';
+                    ctx.textAlign = 'left';
+                    ctx.textBaseline = 'top';
+                    ctx.fillText(re[i].name + ':' + re[i].score, canvas.canvasF.width / 3, canvas.canvasF.height / 5 * (3.2 + i / 3));
+                }
+                
             }
-            if (localStorage.second && localStorage.heroName2) {
-                ctx.fillStyle = '#000';
-                ctx.font = '24px Helvetica';
-                ctx.textAlign = 'left';
-                ctx.textBaseline = 'top';
-                ctx.fillText(localStorage.heroName2 + ':' + localStorage.second , canvas.canvasF.width / 3, canvas.canvasF.height / 5 * 3.4);
-            }
+            // if (localStorage.second && localStorage.heroName2) {
+            //     ctx.fillStyle = '#000';
+            //     ctx.font = '24px Helvetica';
+            //     ctx.textAlign = 'left';
+            //     ctx.textBaseline = 'top';
+            //     ctx.fillText(localStorage.heroName2 + ':' + localStorage.second , canvas.canvasF.width / 3, canvas.canvasF.height / 5 * 3.4);
+            // }
+        },
+
+        // 对象数组里根据某个属性进行排序
+        compareScore: function (arr) {
+            return function (o, p) {
+                var a, b;
+                if (typeof o === 'object' && typeof p === 'object' && o && p) {
+                    a = o[arr];
+                    b = p[arr];
+                    if (a === b) {
+                        return 0;
+                    }
+                    if (typeof a === typeof b) {
+                        return a < b ? 1 : -1;
+                    }
+                    return typeof a < typeof b ? 1 : -1;
+                }
+            };
         },
 
         // 切换背景音乐
