@@ -13,9 +13,12 @@ define(function (require) {
             var canvas = canvasObj.getBCanvas();
             console.log('init background');
             console.log(resource.list.bg);
-            console.log(resource.list.bg.getAttribute('src'));
-            canvas.style.backgroundImage = 'url(' + resource.list.bg.getAttribute('src') + ')';
-            canvas.style.backgroundSize = '100% 100%';
+            // console.log(resource.list.bg.getAttribute('src'));
+            if (resource.list.bg.getAttribute) {
+                canvas.style.backgroundImage = 'url(' + resource.list.bg.getAttribute('src') + ')';
+                canvas.style.backgroundSize = '100% 100%';
+            }
+            
             /*
             this.elm.class = 'image';
             this.elm.obj = resource.list.cat;

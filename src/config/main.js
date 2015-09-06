@@ -19,7 +19,7 @@ define(function (require) {
             {src: 'src/moneyPool/img/shit.png', name: 'shit'}
         ];
         this.sys = {
-            gameTime: 60, //游戏时长
+            gameTime: 10, //游戏时长
             dropObjCount: 4 //下落物数量
         };
 

@@ -65,6 +65,9 @@ define(function (require, exports) {
             this.context.fillStyle = '#000';
             this.context.fillRect(0, 0, 10, 30);
             this.context.fillRect(15, 0, 10, 30);
+        },
+        dispose: function () {
+            this.context.clearRect(0, 0, 25, 30);
         }
 
     };

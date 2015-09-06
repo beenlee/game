@@ -3,6 +3,8 @@
  * @author lidianbin
  */
 define(function (require, exports) {
+
+    var $ = require('jquery');
     window.requestAnimationFrame
         || (window.requestAnimationFrame
             = window.webkitRequestAnimationFrame
@@ -20,6 +22,7 @@ define(function (require, exports) {
     var cat = require('cat/main');
     var canvas = require('canvas/main');
     var config = require('config/main');
+    var home = require('home/main');
     var background = require('background/main');
     var handle = require('handle/main');
     /**
@@ -27,8 +30,7 @@ define(function (require, exports) {
      *
      */
     exports.init = function () {
-
-        this.status = 'play';
+        this.status = 'home';
         this.then = null;
         this.start = null;
         this.score = 0;
@@ -45,20 +47,26 @@ define(function (require, exports) {
         var continueCB = function () {
             this.status = 'play';
             this.end = Date.now();
+            this.then = Date.now();
             this.gameTime += Math.floor((this.end - this.begin) / 1000);
             this.mainLoop();
         }.bind(this);
-        // console.log('re:' + (this.end - this.begin));
-        require('handle/main').init(pauseCB, continueCB);
 
         require('resource/main').init(function () {
+
             var me = this;
             this.reset();
             this.start = this.then = Date.now();
+
             background.init();
-            moneyPool.init();
-            cat.init();
-            this.mainLoop();
+            this.home(function () {
+                this.reset();
+                this.start = this.then = Date.now();
+                moneyPool.init();
+                cat.init();
+                require('handle/main').init(pauseCB, continueCB);
+                this.mainLoop();
+            }.bind(this));
         }.bind(this));
     };
 
@@ -98,17 +106,35 @@ define(function (require, exports) {
      * 游戏首页
      *
      */
-    exports.home = function () {
-        console.log('home');
+    exports.home = function (callback) {
+        home.init(callback);
     };
-    
+
     /**
      * 游戏结束
      *
      */
     exports.gameover = function () {
         console.log('game over!!');
-        console.log('得分：' + this.score);
+        alert('得分：' + this.score);
+        window.location.reload();
+        
+        if (localStorage) {
+            if (!localStorage.best) {
+                this.heroName = prompt('英雄，🔥前留名吧！');
+                localStorage.best = this.score;
+                localStorage.heroName = this.heroName;
+            }
+            else {
+                this.oldScore = localStorage.best;
+                if (this.oldScore <= this.score) {
+                    this.heroName2 = prompt('英雄，🔥前留名吧！');
+                    localStorage.best = this.score;
+                    localStorage.heroName2 = this.heroName2;
+                    localStorage.second = this.oldScore;
+                }
+            }
+        }
     };
 
     /**
@@ -116,7 +142,6 @@ define(function (require, exports) {
      *
      */
     exports.update= function (modifier) {
-        // console.log(modifier);
         var now = Date.now();
         // console.log(Math.floor(now / 1000) + '---' + Math.floor(then / 1000));
         if (Math.floor(now / 1000) !== Math.floor(this.then / 1000)) {
@@ -154,7 +179,7 @@ define(function (require, exports) {
                 tmpMoney.push(this.activeMoney[i]);
             }
         }
-        
+
         this.activeMoney = tmpMoney;
     };
 
@@ -163,22 +188,20 @@ define(function (require, exports) {
      *
      */
     exports.play = function () {
-
         var now = Date.now();
-        // console.log('now = ' + now);
         var delta = now - this.then;
         var t = Math.floor((this.then - this.start) / 1000);
         this.remainingTime = this.gameTime - t;
         
-        // console.log(this.then == now);
         if (this.remainingTime < 0) {
             this.status = 'gameover';
             this.remainingTime = 0;
         }
+        // console.log('delta=' + delta);
         this.update(delta / 1000);
         this.render();
         this.then = now;
-        
+
         requestAnimationFrame(this.mainLoop.bind(this));
     };
 
