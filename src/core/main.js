@@ -132,10 +132,6 @@ define(function (require, exports) {
             }
             this.arr.push(this.obj);
             localStorage.best = JSON.stringify(this.arr);
-            console.log(localStorage.best);
-            console.log(Array.isArray(JSON.parse(localStorage.best)));
-            console.log(JSON.parse(localStorage.best).length);
-            console.log(JSON.parse(localStorage.best)[1].name);
         }
     };
 
