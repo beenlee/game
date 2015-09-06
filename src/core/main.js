@@ -118,22 +118,24 @@ define(function (require, exports) {
         console.log('game over!!');
         alert('得分：' + this.score);
         window.location.reload();
-        
+        this.heroName = prompt('英雄，🔥前留名吧！');
         if (localStorage) {
-            if (!localStorage.best) {
-                this.heroName = prompt('英雄，🔥前留名吧！');
-                localStorage.best = this.score;
-                localStorage.heroName = this.heroName;
+            this.obj = {
+                name: this.heroName,
+                score: this.score
+            }
+            if (localStorage.best) {
+                this.arr = JSON.parse(localStorage.best);
             }
             else {
-                this.oldScore = localStorage.best;
-                if (this.oldScore <= this.score) {
-                    this.heroName2 = prompt('英雄，🔥前留名吧！');
-                    localStorage.best = this.score;
-                    localStorage.heroName2 = this.heroName2;
-                    localStorage.second = this.oldScore;
-                }
+                this.arr = [];
             }
+            this.arr.push(this.obj);
+            localStorage.best = JSON.stringify(this.arr);
+            console.log(localStorage.best);
+            console.log(Array.isArray(JSON.parse(localStorage.best)));
+            console.log(JSON.parse(localStorage.best).length);
+            console.log(JSON.parse(localStorage.best)[1].name);
         }
     };
 
