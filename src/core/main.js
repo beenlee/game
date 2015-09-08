@@ -4,13 +4,34 @@
  */
 define(function (require, exports) {
 
-    var $ = require('jquery');
-    window.requestAnimationFrame
-        || (window.requestAnimationFrame
-            = window.webkitRequestAnimationFrame
-                || window.msRequestAnimationFrame
-                || window.mozRequestAnimationFrame
-        );
+    // var $ = require('jquery');
+    (function () {
+        var lastTime = 0;
+        var vendors = ['ms', 'moz', 'webkit', 'o'];
+        for (var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+            window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
+            window.cancelAnimationFrame
+                = window[vendors[x] + 'CancelAnimationFrame']
+                || window[vendors[x] + 'CancelRequestAnimationFrame'];
+        }
+        if (!window.requestAnimationFrame) {
+            window.requestAnimationFrame = function (callback, element) {
+                var currTime = new Date().getTime();
+                var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+                var id = window.setTimeout(function () {
+                    callback(currTime + timeToCall);
+                }, timeToCall);
+                lastTime = currTime + timeToCall;
+                return id;
+            };
+        }
+        if (!window.cancelAnimationFrame) {
+            window.cancelAnimationFrame = function (id) {
+                clearTimeout(id);
+            };
+        }
+    }());
+
     var isTouch = 'ontouchstart' in window;
     window.eStart = isTouch ? 'touchstart' : 'mousedown';
     window.eMove = isTouch ? 'touchmove' : 'mousemove';
@@ -24,7 +45,7 @@ define(function (require, exports) {
     var config = require('config/main');
     var home = require('home/main');
     var background = require('background/main');
-    var handle = require('handle/main');
+    
     /**
      * init
      *
@@ -88,9 +109,6 @@ define(function (require, exports) {
         else if (this.status === 'pause') {
             // this.pauseGame();
         }
-        else if (this.status === 'playAgain') {
-            // this.playAgain();
-        }
     };
 
     exports.reset = function () {
@@ -139,7 +157,7 @@ define(function (require, exports) {
      * 更新各种对象
      *
      */
-    exports.update= function (modifier) {
+    exports.update = function (modifier) {
         var now = Date.now();
         // console.log(Math.floor(now / 1000) + '---' + Math.floor(then / 1000));
         if (Math.floor(now / 1000) !== Math.floor(this.then / 1000)) {
@@ -190,7 +208,7 @@ define(function (require, exports) {
         var delta = now - this.then;
         var t = Math.floor((this.then - this.start) / 1000);
         this.remainingTime = this.gameTime - t;
-        
+
         if (this.remainingTime < 0) {
             this.status = 'gameover';
             this.remainingTime = 0;
